@@ -1,7 +1,7 @@
 # chip8Emulator
 I always really liked emulator and old games, so I decided to try to build my own emulator in javascript. For that I used videos, sites, references about chip8 and codes from other devs. So I was able to understand a little bit how an emulator is made.
 
-![Captura de tela 2023-05-11 124318](https://github.com/joserochadev/chip8Emulator/assets/92328683/b2e63879-d5d1-45ba-996e-b82c8a3c2858)
+![Captura de tela 2023-05-11 125715](https://github.com/joserochadev/chip8Emulator/assets/92328683/f854ef69-07dd-4dd5-a3e0-7430c1cd7bf3)
 
 ## References
 
