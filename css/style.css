@@ -10,6 +10,7 @@ body {
   justify-content: center;
   min-height: 100vh;
   background-color: #333;
+  font-family: Arial, Helvetica, sans-serif;
 }
 
 canvas {
@@ -17,3 +18,61 @@ canvas {
   background-color: #036145;
 
 }
+
+.container{
+  display: flex;
+  align-items: start;
+  justify-self: center;
+  flex-wrap: wrap;
+  gap: 16px;
+}
+
+
+.aside{
+  gap: 16px;
+  color: aliceblue;
+}
+
+.aside select{
+  width: 100%;
+  height: 1.75rem;
+  outline: none;
+  margin-top: 4px;
+}
+
+#btnInitRom{
+  margin-bottom: 16px;
+  margin-top: 4px;
+  margin-left: 10%;
+  width: 80%;
+  height: 2rem;
+  border-radius: 6px;
+  outline: none;
+  cursor: pointer;
+  background: #2cae1e;
+  color: aliceblue;
+  font-weight: 600;
+  font-size: medium;
+
+}
+
+.aside .keys{
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap:8px;
+  margin-top: 4px;
+}
+
+.keys span{
+  width: 32px;
+  height: 32px;
+  text-transform: uppercase;
+  border: 1px solid aliceblue;
+  border-radius: 4px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+

@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -7,45 +8,94 @@
   <link rel="stylesheet" href="./css/style.css">
   <title>CHIP8 Emulator</title>
 </head>
-<body>
-  <canvas id="cnv" ></canvas>
 
-  <audio></audio>
+<body>
+  <div class="container">
+    <canvas id="cnv"></canvas>
+    <div class="aside">
+      <h2>Selecionar Rom:</h2>
+      <select name="games" id="games">
+        <option value="Chip8 Picture">chip8 Logo</option>
+        <option value="pong">Pong</option>
+        <option value="Keypad Test [Hap, 2006]">Keypad Test [Hap, 2006]</option>
+        <option value="tetris">Tetris</option>
+        <option value="logo">IBM Logo</option>
+      </select>
+      <button id="btnInitRom">Iniciar Rom</button>
+      <h2>Teclas:</h2>
+      <div class="keys">
+        <span>1</span>
+        <span>2</span>
+        <span>3</span>
+        <span>4</span>
+        <span>q</span>
+        <span>w</span>
+        <span>e</span>
+        <span>r</span>
+        <span>a</span>
+        <span>s</span>
+        <span>d</span>
+        <span>f</span>
+        <span>z</span>
+        <span>x</span>
+        <span>c</span>
+      </div>
+    </div>
+  </div>
+
+
 
   <script src="./js/chip8.js"></script>
-
   <script>
 
-      let chip = new chip8()
+    let chip = new chip8()
 
-      document.addEventListener('keydown', (e) => {
-        chip.keys[chip.keyMap[e.keyCode]] = true
-        chip.currentKey = chip.keyMap[e.keyCode]
-      })
+    document.addEventListener('keydown', (e) => {
+      chip.keys[chip.keyMap[e.keyCode]] = true
+      chip.currentKey = chip.keyMap[e.keyCode]
+    })
 
-      document.addEventListener('keyup', (e) => {
-        chip.keys[chip.keyMap[e.keyCode]] = false
-        chip.currentKey = false
-      })
+    document.addEventListener('keyup', (e) => {
+      chip.keys[chip.keyMap[e.keyCode]] = false
+      chip.currentKey = false
+    })
 
 
 
-      function loadRom(){
-        let xhr = new XMLHttpRequest
-        xhr.open('GET', './roms/tetris.ch8', true)
-        xhr.responseType = 'arraybuffer'
+    function loadRom() {
+      let xhr = new XMLHttpRequest
+      const rom = getRom()
+      xhr.open('GET', `./roms/${rom}.ch8`, true)
+      xhr.responseType = 'arraybuffer'
 
-        xhr.onload = function() {
-          let rom = new Uint8Array(xhr.response)
-          console.log(rom)
-          chip.loadRom(rom)
-        }
-
-        xhr.send()
+      xhr.onload = function () {
+        let rom = new Uint8Array(xhr.response)
+        console.log(rom)
+        chip.init()
+        chip.loadRom(rom)
       }
 
+      xhr.send()
+    }
+
+    function getRom() {
+      const rom = document.querySelector("#games").value
+      return rom
+
+    }
+
+    const btnRomInit = document.querySelector("#btnInitRom")
+    btnRomInit.addEventListener('click', () => {
+      const cnv = document.querySelector('canvas')
+      const ctx = cnv.getContext('2d')
+      ctx.clearRect(0, 0, 640, 320)
+      cnv.style.background = ' #036145'
       loadRom()
+    })
+
+    loadRom()
 
   </script>
 </body>
+
 </html>

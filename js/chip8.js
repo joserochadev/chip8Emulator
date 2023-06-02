@@ -3,6 +3,7 @@
 const chip8 = function() {
   const cnv = document.getElementById('cnv')
 
+  
   this.ctx = cnv.getContext('2d')
   this.pixelSize = 10
   this.width = 64 * this.pixelSize
@@ -82,10 +83,6 @@ chip8.prototype.init = function() {
     this.memory[i] = fonts[i]
   }
 
-    // cria um contexto de áudio
-  
-
-
 
 }
 
@@ -96,7 +93,10 @@ chip8.prototype.loadRom = function(rom) {
     this.memory[0x200 + i] = rom[i]
   }
 
-
+  for(let i in this.display){
+    this.display[i] = 0
+  }
+  this.displayFlag = true
 
   this.cycle()
 }
