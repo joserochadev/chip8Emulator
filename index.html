@@ -1,101 +1,149 @@
 <!DOCTYPE html>
 <html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=VT323&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="./css/style.css" />
+    <title>CHIP-8 Emulator</title>
+  </head>
 
-<head>
-  <meta charset="UTF-8">
-  <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link rel="stylesheet" href="./css/style.css">
-  <title>CHIP8 Emulator</title>
-</head>
+  <body>
+    <div class="emulator-container">
+      <div class="screen-container">
+        <canvas id="cnv"></canvas>
+      </div>
+      <div class="controls-container">
+        <h2>ROMS</h2>
+        <select name="games" id="games">
+          <option value="Chip8 Picture">Chip-8 Logo</option>
+          <option value="pong">Pong</option>
+          <option value="Keypad Test [Hap, 2006]">Keypad Test</option>
+          <option value="tetris">Tetris</option>
+          <option value="logo">IBM Logo</option>
+        </select>
+        <button id="btnInitRom">Load ROM</button>
 
-<body>
-  <div class="container">
-    <canvas id="cnv"></canvas>
-    <div class="aside">
-      <h2>Selecionar Rom:</h2>
-      <select name="games" id="games">
-        <option value="Chip8 Picture">chip8 Logo</option>
-        <option value="pong">Pong</option>
-        <option value="Keypad Test [Hap, 2006]">Keypad Test [Hap, 2006]</option>
-        <option value="tetris">Tetris</option>
-        <option value="logo">IBM Logo</option>
-      </select>
-      <button id="btnInitRom">Iniciar Rom</button>
-      <h2>Teclas:</h2>
-      <div class="keys">
-        <span>1</span>
-        <span>2</span>
-        <span>3</span>
-        <span>4</span>
-        <span>q</span>
-        <span>w</span>
-        <span>e</span>
-        <span>r</span>
-        <span>a</span>
-        <span>s</span>
-        <span>d</span>
-        <span>f</span>
-        <span>z</span>
-        <span>x</span>
-        <span>c</span>
+        <h2>Keyboard</h2>
+        <div class="keys">
+          <span data-key="0x1">1</span><span data-key="0x2">2</span
+          ><span data-key="0x3">3</span><span data-key="0xC">C</span>
+          <span data-key="0x4">4</span><span data-key="0x5">5</span
+          ><span data-key="0x6">6</span><span data-key="0xD">D</span>
+          <span data-key="0x7">7</span><span data-key="0x8">8</span
+          ><span data-key="0x9">9</span><span data-key="0xE">E</span>
+          <span data-key="0xA">A</span><span data-key="0x0">0</span
+          ><span data-key="0xB">B</span><span data-key="0xF">F</span>
+        </div>
       </div>
     </div>
-  </div>
 
+    <script src="./js/chip8.js"></script>
+    <script>
+      let chip = new Chip8();
 
+      const keyMap = {
+        1: "0x1",
+        2: "0x2",
+        3: "0x3",
+        c: "0xC",
+        4: "0x4",
+        5: "0x5",
+        6: "0x6",
+        d: "0xD",
+        7: "0x7",
+        8: "0x8",
+        9: "0x9",
+        e: "0xE",
+        a: "0xA",
+        0: "0x0",
+        b: "0xB",
+        f: "0xF",
+      };
 
-  <script src="./js/chip8.js"></script>
-  <script>
+      const physicalKeyMap = {
+        1: "0x1",
+        2: "0x2",
+        3: "0x3",
+        4: "0xC",
+        q: "0x4",
+        w: "0x5",
+        e: "0x6",
+        r: "0xD",
+        a: "0x7",
+        s: "0x8",
+        d: "0x9",
+        f: "0xE",
+        z: "0xA",
+        x: "0x0",
+        c: "0xB",
+        v: "0xF",
+      };
 
-    let chip = new chip8()
-
-    document.addEventListener('keydown', (e) => {
-      chip.keys[chip.keyMap[e.keyCode]] = true
-      chip.currentKey = chip.keyMap[e.keyCode]
-    })
-
-    document.addEventListener('keyup', (e) => {
-      chip.keys[chip.keyMap[e.keyCode]] = false
-      chip.currentKey = false
-    })
-
-
-
-    function loadRom() {
-      let xhr = new XMLHttpRequest
-      const rom = getRom()
-      xhr.open('GET', `./roms/${rom}.ch8`, true)
-      xhr.responseType = 'arraybuffer'
-
-      xhr.onload = function () {
-        let rom = new Uint8Array(xhr.response)
-        console.log(rom)
-        chip.init()
-        chip.loadRom(rom)
+      function toggleKeyAnimation(chip8Key, isActive) {
+        const keyElement = document.querySelector(
+          `.keys span[data-key="${chip8Key}"]`
+        );
+        if (keyElement) {
+          if (isActive) {
+            keyElement.classList.add("active");
+          } else {
+            keyElement.classList.remove("active");
+          }
+        }
       }
 
-      xhr.send()
-    }
+      document.addEventListener("keydown", (e) => {
+        const chip8Key = physicalKeyMap[e.key.toLowerCase()];
+        if (chip8Key !== undefined) {
+          const keyAsNumber = parseInt(chip8Key);
+          chip.keys[keyAsNumber] = true;
+          chip.currentKey = keyAsNumber;
 
-    function getRom() {
-      const rom = document.querySelector("#games").value
-      return rom
+          toggleKeyAnimation(chip8Key, true);
+        }
+      });
 
-    }
+      document.addEventListener("keyup", (e) => {
+        const chip8Key = physicalKeyMap[e.key.toLowerCase()];
+        if (chip8Key !== undefined) {
+          const keyAsNumber = parseInt(chip8Key);
+          chip.keys[keyAsNumber] = false;
+          chip.currentKey = false;
 
-    const btnRomInit = document.querySelector("#btnInitRom")
-    btnRomInit.addEventListener('click', () => {
-      const cnv = document.querySelector('canvas')
-      const ctx = cnv.getContext('2d')
-      ctx.clearRect(0, 0, 640, 320)
-      cnv.style.background = ' #036145'
-      loadRom()
-    })
+          toggleKeyAnimation(chip8Key, false);
+        }
+      });
 
-    loadRom()
+      function loadRom() {
+        let xhr = new XMLHttpRequest();
+        const romName = document.querySelector("#games").value;
+        xhr.open("GET", `./roms/${romName}.ch8`, true);
+        xhr.responseType = "arraybuffer";
 
-  </script>
-</body>
+        xhr.onload = function () {
+          if (xhr.status === 200) {
+            let rom = new Uint8Array(xhr.response);
+            chip.init();
+            chip.loadRom(rom);
+          }
+        };
+        xhr.send();
+      }
 
+      const btnRomInit = document.querySelector("#btnInitRom");
+      btnRomInit.addEventListener("click", () => {
+        loadRom();
+      });
+
+      // Carrega a ROM inicial
+      loadRom();
+    </script>
+  </body>
 </html>
